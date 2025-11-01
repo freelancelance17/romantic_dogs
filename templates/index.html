@@ -15,6 +15,26 @@
             padding: 20px;
             line-height: 1.6;
             max-width: 100%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light {
+            background-color: #fff;
+            color: #000;
+        }
+        body.dark {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
         }
         .story {
             max-width: 650px;
@@ -26,8 +46,13 @@
         }
         .meta {
             font-size: 0.9em;
-            color: #666;
             margin-bottom: 20px;
+        }
+        body.light .meta {
+            color: #666;
+        }
+        body.dark .meta {
+            color: #999;
         }
         .content {
             white-space: pre-wrap;
@@ -35,7 +60,9 @@
         }
     </style>
 </head>
-<body>
+<body class="light">
+    <!-- <button class="toggle" onclick="toggleTheme()" id="themeToggle">🌙</button> -->
+    <!---->
     {% if story %}
     <div class="story">
         <div class="title">{{ story.title }}</div>
@@ -52,5 +79,35 @@
         <p>No stories published yet.</p>
     </div>
     {% endif %}
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const toggle = document.getElementById('themeToggle');
+
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                body.classList.add('dark');
+                toggle.textContent = '.';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark');
+                body.classList.add('light');
+                toggle.textContent = '.';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const body = document.body;
+            const toggle = document.getElementById('themeToggle');
+
+            body.classList.remove('light', 'dark');
+            body.classList.add(savedTheme);
+            toggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        });
+    </script>
 </body>
 </html>
